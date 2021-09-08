@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.short_link.dao.ShortLinkMapper">
+
+    <select id="isExistShortLinkById" parameterType="String" resultType="int">
+        SELECT count(*) FROM link_table WHERE short_id = #{shortId}
+    </select>
+
+    <insert id="insertShortLink" parameterType="com.test.short_link.domain.dto.ShortLinkDto">
+        INSERT INTO link_table
+        (
+           short_id
+         , url
+         , created_at
+        ) values (
+           #{shortId}
+         , #{url}
+         , now()
+        )
+    </insert>
+
+    <select id="selectUrlByShortId" parameterType="String" resultType="String">
+        SELECT url FROM link_table WHERE short_id = #{shortId}
+    </select>
+
+    <select id="selectShortLinkById" parameterType="String" resultType="com.test.short_link.domain.ShortLink">
+        SELECT url as url
+             , short_id as shortId
+             , created_at as createdAt
+        FROM link_table
+        WHERE short_id = #{shortId}
+    </select>
+
+    <select id="selectShortLinkList" parameterType="com.test.short_link.domain.dto.ShortLinkListDto" resultType="com.test.short_link.domain.ShortLink">
+        SELECT url as url
+             , short_id as shortId
+             , created_at as createdAt
+        FROM link_table
+        LIMIT #{startOffset}, #{endOffset}
+    </select>
+
+    <update id="updateShortId" parameterType="AliasCustomDto">
+        UPDATE link_table SET short_id = #{aliasName} where short_id = #{shortId}
+    </update>
+
+    <delete id="deleteShortLinkById" parameterType="String">
+        DELETE FROM link_table WHERE short_id = #{shortId}
+    </delete>
+
+</mapper>
